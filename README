@@ -1,0 +1,75 @@
+== SearchApi
+
+Look at following Rails expression, which look for 34 years-old women:
+
+  People.find(
+    :all,
+    :conditions => {:sex => 'F',
+                    :birth_date => (Date.today-34.years)..
+                                   (Date.today-33.years+1.day))
+  
+That's a pretty handy way to avoid using heavy SQL expressions like:
+
+  People.find(
+    :all,
+    :conditions => ['sex = ? AND birth_date BETWEEN ? AND ?,
+                    'F',
+                    (Date.today-34.years),
+                    (Date.today-33.years+1.day)])
+
+SearchApi plugin pushes the concept a step further, allowing you to define custom search keys that you can use in these condition hashes:
+
+  People.find(
+    :all,
+    :conditions => { :female => true, :age => 34 })
+
+
+Or, why not:
+
+  People.find(
+    :all,
+    :conditions => { :possible_mate => true })
+
+This last expression would return people matching whatever condition is held by the "possible_mate" concept.
+
+<b>SearchApi allows for defining Search API through SQL encapsulation</b>, thanks to those keys in conditions hashes that are not columns.
+
+=== Example
+
+Let's define the <tt>:female</tt> and <tt>:age</tt> search keys:
+
+  class People < ActiveRecord::Base
+    has_search_api
+
+    # define age search key
+    search :age do |search|
+      { :conditions => ['birth_date BETWEEN ? AND ?',
+                        (Date.today-search.age.years),
+                        (Date.today-(search.age-1).years+1.day)]}
+    end
+    
+    # define female search key
+    search :female do |search|
+      { :conditions => ['sex = ?', if search.female then 'F' else 'M' end]}
+    end
+  end
+
+=== Navigate in this documentation
+
+- <b>Learn how to add your own search keys</b>
+
+  Jump directly to  the documentation of ActiveRecord::Base and its has_search_api method.
+
+- <b>Learn about which search keys are automatically defined</b>
+
+  When your model calls has_search_api, many handy search keys are automatically defined: go look at SearchApi::Bridge::ActiveRecord and its method automatic_search_attribute_builders.
+
+- <b>Dig further into SearchApi plugin</b>
+
+  Learn about:
+
+  - <b>bridges</b>: SearchApi::Bridge::Base allows any class to be searchable;
+  
+  - <b>ActiveRecord bridge</b>: SearchApi::Bridge::ActiveRecord implements ActiveRecord searchable capabilities;
+  
+  - <b>ActiveRecord integration</b>: SearchApi::Integration::ActiveRecord that ties all together, allowing you to extend conditions hashes.
