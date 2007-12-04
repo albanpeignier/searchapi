@@ -1,44 +1,67 @@
+== Download
+
+The latest version of SearchAPI can be found at
+
+* http://rubyforge.org/projects/searchapi
+
+Documentation can be found at 
+
+* http://www.pierlis.com/doc/searchapi
+
+
+== Installation
+
+The preferred method of installing SearchAPI is through the following command:
+
+  $ script/plugin install svn://rubyforge.org/var/svn/searchapi
+
+
+== License
+
+SearchAPI is released under the MIT license.
+
+
 == SearchApi
 
-Look at following Rails expression, which look for 34 years-old women:
+Look at following Rails expression, which look for 34 years-old men:
 
-  People.find(
+  Person.find(
     :all,
-    :conditions => {:sex => 'F',
+    :conditions => {:sex => 'M',
                     :birth_date => (Date.today-34.years)..
                                    (Date.today-33.years+1.day))
   
 That's a pretty handy way to avoid using heavy SQL expressions like:
 
-  People.find(
+  Person.find(
     :all,
     :conditions => ['sex = ? AND birth_date BETWEEN ? AND ?,
-                    'F',
+                    'M',
                     (Date.today-34.years),
                     (Date.today-33.years+1.day)])
 
 SearchApi plugin pushes the concept a step further, allowing you to define custom search keys that you can use in these condition hashes:
 
-  People.find(
+  Person.find(
     :all,
-    :conditions => { :female => true, :age => 34 })
+    :conditions => { :male => true, :age => 34 })
 
 
 Or, why not:
 
-  People.find(
+  Person.find(
     :all,
-    :conditions => { :possible_mate => true })
+    :conditions => { :thirty_four_aged_men => true })
 
-This last expression would return people matching whatever condition is held by the "possible_mate" concept.
+This last expression would return people matching whatever condition is held by the "thirty_four_aged_men" concept.
 
-<b>SearchApi allows for defining Search API through SQL encapsulation</b>, thanks to those keys in conditions hashes that are not columns.
+<b>SearchApi allows for defining Search API through SQL encapsulation</b>, thanks to those keys in conditions hashes that are decoupled from actual underlying columns.
 
 === Example
 
-Let's define the <tt>:female</tt> and <tt>:age</tt> search keys:
+Let's define the <tt>:male</tt> and <tt>:age</tt> search keys:
 
-  class People < ActiveRecord::Base
+  class Person < ActiveRecord::Base
     has_search_api
 
     # define age search key
@@ -48,9 +71,9 @@ Let's define the <tt>:female</tt> and <tt>:age</tt> search keys:
                         (Date.today-(search.age-1).years+1.day)]}
     end
     
-    # define female search key
-    search :female do |search|
-      { :conditions => ['sex = ?', if search.female then 'F' else 'M' end]}
+    # define male search key
+    search :male do |search|
+      { :conditions => ['sex = ?', if search.male then 'M' else 'F' end]}
     end
   end
 
