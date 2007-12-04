@@ -14,7 +14,7 @@ module SearchApi
       MULTI_COLUMN_OPERATORS = %w(full_text)
     
       class << self
-        VALID_FIND_OPTIONS = [ :conditions, :include, :joins, :order, :select, :group, :havings ]
+        VALID_FIND_OPTIONS = [ :conditions, :include, :joins, :order, :select, :group, :having ]
 
         def validate_find_options(options) #:nodoc:
           options.assert_valid_keys(VALID_FIND_OPTIONS)
@@ -306,7 +306,7 @@ module SearchApi
         end
       
       
-        # Merge :groups and :havings options
+        # Merge :groups and :having options
       
         unless all_options[:groups].nil? || all_options[:groups].empty?
           # merge groups with comma
@@ -315,10 +315,10 @@ module SearchApi
                                                 uniq.
                                                 join(', ')
         
-          # merge havings conditions into :group option
-          unless all_options[:havings].nil? || all_options[:havings].empty?
-            # merge havings with AND
-            merged_options[:group] += ' HAVING (' + all_options[:havings].
+          # merge having conditions into :group option
+          unless all_options[:having].nil? || all_options[:having].empty?
+            # merge having with AND
+            merged_options[:group] += ' HAVING (' + all_options[:having].
                                                     map { |fragment| SearchApi::SqlFragment.sanitize(fragment) }.
                                                     uniq.
                                                     join(') AND (')+ ')'
