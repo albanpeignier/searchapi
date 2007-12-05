@@ -11,7 +11,7 @@ class ActiveRecordBridgeTest < Test::Unit::TestCase
     begin
       Searchable.find(:first)
     rescue
-      raise "run 'rake search_api_migrate_test_db' in the application directory before running search_api tests"
+      raise "run 'rake searchapi_migrate_test_db' in the application directory before running searchapi tests"
     end
   end
   
