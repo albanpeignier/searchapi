@@ -1,5 +1,5 @@
 require 'test/unit'
-RAILS_ENV = "test"
+RAILS_ENV = "test" unless defined?(RAILS_ENV)
 require File.expand_path(File.join(File.dirname(__FILE__), '../../../../config/environment.rb'))
 require 'search_api'
 require 'active_record_bridge'

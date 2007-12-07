@@ -43,7 +43,7 @@ module SearchApi
         def find_with_search_support(*args)
           options = if args.last.is_a?(Hash) then args.last else {} end
           if options[:conditions].nil? || options[:conditions].is_a?(Hash)
-            with_scope(:find => search_class.new(options.delete(:conditions)).find_options) do
+            send(:with_scope, :find => search_class.new(options.delete(:conditions)).find_options) do
               find_without_search_support(*args)
             end
           else
@@ -55,7 +55,7 @@ module SearchApi
         def count_with_search_support(*args)
           options = if args.last.is_a?(Hash) then args.last else {} end
           if options[:conditions].nil? || options[:conditions].is_a?(Hash)
-            with_scope(:find => search_class.new(options.delete(:conditions)).find_options) do
+            send(:with_scope, :find => search_class.new(options.delete(:conditions)).find_options) do
               count_without_search_support(*args)
             end
           else
@@ -149,7 +149,7 @@ module SearchApi
             if @reflection.klass.respond_to?(:search_class)
               options = if args.last.is_a?(Hash) then args.last else {} end
               if options[:conditions].nil? || options[:conditions].is_a?(Hash)
-                @reflection.klass.with_scope(:find => @reflection.klass.search_class.new(options.delete(:conditions)).find_options) do
+                @reflection.klass.send(:with_scope, :find => @reflection.klass.search_class.new(options.delete(:conditions)).find_options) do
                   find_without_search_support(*args)
                 end
               else
@@ -173,7 +173,7 @@ module SearchApi
             if @reflection.klass.respond_to?(:search_class)
               options = if args.last.is_a?(Hash) then args.last else {} end
               if options[:conditions].nil? || options[:conditions].is_a?(Hash)
-                @reflection.klass.with_scope(:find => @reflection.klass.search_class.new(options.delete(:conditions)).find_options) do
+                @reflection.klass.send(:with_scope, :find => @reflection.klass.search_class.new(options.delete(:conditions)).find_options) do
                   count_without_search_support(*args)
                 end
               else
