@@ -308,6 +308,13 @@ module SearchApi
       
         # Merge :groups and :having options
       
+        unless all_options[:having].nil? || all_options[:having].empty?
+          # default group by if having clause is present
+          if all_options[:groups].nil? || all_options[:groups].empty?
+            all_options[:groups] = ["GROUP BY #{@active_record_class.table_name}.#{@active_record_class.primary_key}"]
+          end
+        end
+        
         unless all_options[:groups].nil? || all_options[:groups].empty?
           # merge groups with comma
           merged_options[:group] = all_options[:groups].
