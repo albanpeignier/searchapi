@@ -306,18 +306,18 @@ module SearchApi
         end
       
       
-        # Merge :groups and :having options
+        # Merge :group and :having options
       
         unless all_options[:having].nil? || all_options[:having].empty?
           # default group by if having clause is present
-          if all_options[:groups].nil? || all_options[:groups].empty?
-            all_options[:groups] = ["GROUP BY #{@active_record_class.table_name}.#{@active_record_class.primary_key}"]
+          if all_options[:group].nil? || all_options[:group].empty?
+            all_options[:group] = ["#{@active_record_class.table_name}.#{@active_record_class.primary_key}"]
           end
         end
         
-        unless all_options[:groups].nil? || all_options[:groups].empty?
+        unless all_options[:group].nil? || all_options[:group].empty?
           # merge groups with comma
-          merged_options[:group] = all_options[:groups].
+          merged_options[:group] = all_options[:group].
                                                 map { |fragment| SearchApi::SqlFragment.sanitize(fragment) }.
                                                 uniq.
                                                 join(', ')
