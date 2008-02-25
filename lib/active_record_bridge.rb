@@ -73,8 +73,10 @@ module SearchApi
       def automatic_search_attribute_builders(options)
       
         # every column will create builders
+        columns = @active_record_class.columns rescue []  # if no column can be found, there may be a database problem.
+        
         builders = []
-        @active_record_class.columns.each do |column|
+        columns.each do |column|
         
           # Append a builder for a standard AR::Base search.
           builders << ::SearchApi::Search::SearchAttributeBuilder.new(
