@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 #--
 # Copyright (c) 2007 Gwendal Roué, Pierlis
 #
@@ -22,5 +23,3 @@
 #++
 
 require 'search_api'
-require 'active_record_bridge'
-require 'active_record_integration'
